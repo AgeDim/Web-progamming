@@ -3,7 +3,9 @@ package web.Lab3.bean;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Named("timeBean")
 @ApplicationScoped
@@ -23,7 +25,9 @@ public class TimeBean implements Serializable {
         }
         return newVal;
     }
-
+    public String getTime(){
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+    }
     public String getDay() {
         return rightFormat(ZonedDateTime.now().getDayOfMonth());
     }

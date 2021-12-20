@@ -28,29 +28,21 @@ function checkHit(event) {
     let y_val = (200 - cordY) / 150 * 4;
     document.forms[2].elements[4].value = x_val;
     document.forms[2].elements[5].value = y_val;
+    document.forms[2].elements[6].value = r_val;
     document.forms[2].elements[0].click();
+    console.log(document.forms[2].elements);
 }
+function updateRadius(){
+        let r = document.forms[1].elements[5].value;
+        if (r > 4 || r<1){
+                return;
+        }
+        let path = "M"+(200 - 150*r/4)+" 200 A 150 150, 0, 0, 0, 200 "+(200 + 150*r/4)+" L 200 200 Z";
+        $("#path").attr("d", path);
+        let polygon = "200,"+ (200 - 150*r/4) + " " + (199 + 75*r/4) + ","+(200 - 150*r/4) +" "+(199 + 75*r/4)+",200 200,200";
+        $("#rectangle").attr("points", polygon);
+        let polygon1 = (200 + 150*r/4)+",200 200,"+(200 + 75*r/4)+" 200,200";
+        $("#triangle").attr("points", polygon1);
 
-function add_row(data) {
-    let xv = data.xval;
-    let yv = data.yval;
-    let exec = data.executeTime;
-    let row = $('<tr>');
-    $('<td>').html(parseFloat(xv).toFixed(3)).appendTo(row);
-    $('<td>').html(parseFloat(yv).toFixed(3)).appendTo(row);
-    $('<td>').html(data.rval).appendTo(row);
-    $('<td>').html(data.currentTime).appendTo(row);
-    $('<td>').html(parseFloat(exec).toFixed(7)).appendTo(row);
-    $('<td>').html(data.result).appendTo(row);
-    $(row).insertAfter($('#result-table tr:last').eq(0));
+
 }
-
-// function updateRadius() {
-//     let r = $('#r-textinput');
-//     if (r > 4 || r < 1){return;}
-//     let path = "M 200 " + (200-150*r/4) + " L 200 " + (200-75*r/4) + " L " + (200+150*r/4) + " " + (200-75*r/4) +
-//         " L " + (200-150*r/4) + " 200 L 200 200 L 200 " + (200-150*r/4) + " A " + (150*r/4) + " " + (150*r/4) +
-//         " 0 0 1 " + (200-150*r/4) + " 200 L 200 " + (200-150*r/4);
-//     $("#path").attr("d", path);
-// }
-
