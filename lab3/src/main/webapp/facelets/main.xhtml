@@ -100,7 +100,7 @@
                 </div>
 
                 <div class="scroll-container" style="background-color: rgba(0, 125, 215, 0)">
-                    <h:dataTable id="result-table" value="#{hitresBean.getHistory()}" var="response">
+                    <h:dataTable id="result-table" value="#{hitresBean.history}" var="response">
                         <h:column>
                             <f:facet name="header">X</f:facet>
                             #{response.x}
@@ -154,8 +154,7 @@
                                 <h:outputLabel>Y:
                                 <h:inputText id="y-textinput" a:placeholder="Number from -3 to 5..." maxlength="10"
                                              name="yval" value="#{hitresBean.y}">
-                                    <f:ajax execute="@this" render="@this">
-                                    <f:validateDoubleRange minimum="-3" maximum="5"/>
+                                    <f:ajax execute="@this" render="@this" validatorMessage="Введите Y(Number from 1 to 4)">
                                 </f:ajax>
                                 </h:inputText>
                                 </h:outputLabel>
@@ -169,19 +168,23 @@
                                              name="yval" value="#{hitresBean.r}" onchange="updateRadius()"
                                 >
                                     <f:ajax execute="@this" render="@this, svg"
-                                            >
-                                        <f:validateDoubleRange minimum="1" maximum="4"
-                                                               validatorMessage="Число должно быть от 1 до 4"
-                                                               converterMessage="Введите корректное число"
-                                        />
+                                            validatorMessage="Введите R(Number from 1 to 4)">
                                     </f:ajax>
                                 </h:inputText>
                                 </h:outputLabel>
                             </td>
                             <td>
-                                <h:message for="y-textinput" style="color:red; font-size: 10px;" />
-                                <h1/>
-                                <h:message for="r-textinput" style="color:red; font-size: 10px;" />
+                                <h:panelGroup rendered="true" id="error">
+                                    <div id="error_x">
+                                        <h:outputText value="#{hitresBean.errorX.getMessage()}"/>
+                                    </div>
+                                    <div id="error_y">
+                                        <h:outputText value="#{hitresBean.errorY.getMessage()}"/>
+                                    </div>
+                                    <div id="error_r">
+                                        <h:outputText value="#{hitresBean.errorR.getMessage()}"/>
+                                    </div>
+                                </h:panelGroup>
                             </td>
                         </tr>
                         <!-- Buttons -->
@@ -189,7 +192,7 @@
 
                             <td colspan="2">
                                 <div class="buttons">
-                                    <h:commandButton id="send" type="submit" value="Выстрел" action="${hitresBean.addCheck()}" render="result-table"/>
+                                    <h:commandButton id="send" type="submit" value="Выстрел" action="${hitresBean.submit()}" render="result-table"/>
                                     <h:commandButton id="reset" type="reset" value="Очистить"/>
                                 </div>
                             </td>
