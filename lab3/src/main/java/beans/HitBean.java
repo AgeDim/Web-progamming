@@ -2,7 +2,7 @@ package beans;
 
 import back.CheckArea;
 import back.Validation;
-import database.dao.ResultDAO;
+import database.dao.DataAO;
 import entity.Result;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -12,23 +12,23 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
-@Named("hitresBean")
+@Named("hitBean")
 @ApplicationScoped
 public class HitBean implements Serializable {
     private final Validation validation;
     private final CheckArea checkArea;
-    private final ResultDAO resultDAO;
+    private final DataAO dataAO;
 
 
     public HitBean(){
         validation = new Validation();
         checkArea = new CheckArea();
-        resultDAO = new ResultDAO();
-        resultDAO.initializeTable();
-        x = "0";
+        dataAO = new DataAO();
+        dataAO.initializeTable();
+        x = 0f;
     }
 
-    private String x;
+    private Float x;
     private String y;
     private String r;
 
@@ -43,7 +43,7 @@ public class HitBean implements Serializable {
     public void submit(){
         long start = System.nanoTime();
 
-        Float numericalX = validation.validateX(x);
+        Float numericalX = validation.validateX(x.toString());
         Float numericalY = validation.validateY(y);
         Float numericalR = validation.validateR(r);
 
@@ -52,27 +52,27 @@ public class HitBean implements Serializable {
         correctR = (numericalR != null);
 
         if (correctX && correctY && correctR){
-            Result result = new Result();
-            result.setX(numericalX.floatValue());
-            result.setY(numericalY.floatValue());
-            result.setR(numericalR);
-            result.setCurrentTime(new SimpleDateFormat("HH:mm:ss dd.MM.yyyy").format(Calendar.getInstance().getTime()));
-            result.setExecuteTime((System.nanoTime() - start)/1000);
-            result.setResult(checkArea.hit(numericalX, numericalY, numericalR));
-            resultDAO.addResult(result);
+            Result shot = new Result();
+            shot.setX(numericalX.floatValue());
+            shot.setY(numericalY.floatValue());
+            shot.setR(numericalR.floatValue());
+            shot.setCurrentTime(new SimpleDateFormat("HH:mm:ss dd.MM.yyyy").format(Calendar.getInstance().getTime()));
+            shot.setExecuteTime((System.nanoTime() - start)/1000);
+            shot.setResult(checkArea.hit(numericalX, numericalY, numericalR));
+            dataAO.addShot(shot);
         } 
     }
 
     public List<Result> getHistory(){
-        return  resultDAO.getResult();
+        return  dataAO.getShots();
     }
 
 
-    public String getX() {
+    public Float getX() {
         return x;
     }
 
-    public void setX(String x) {
+    public void setX(Float x) {
         this.x = x;
     }
 

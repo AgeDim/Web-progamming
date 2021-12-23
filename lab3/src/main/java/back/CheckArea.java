@@ -20,4 +20,3 @@ public class CheckArea implements ICheckArea, Serializable {
         }
     }
 }
-

@@ -43,12 +43,12 @@
                     <svg id="svg" class="svg" height="400" width="400" onclick="checkHit(event)">
                         <!-- Areas -->
                         <!-- cquare-->
-                        <polygon fill="#008cf0" fill-opacity="0.5" points="200,#{200 - 150*hitresBean.r/4} #{200 + 75*hitresBean.r/4},
-                        #{200 - 150*hitresBean.r/4} #{200 + 75*hitresBean.r/4},200 200,200" stroke="black" id="rectangle"/>
+                        <polygon fill="#008cf0" fill-opacity="0.5" points="200,#{200 - 150*hitBean.r/4} #{200 + 75*hitBean.r/4},
+                        #{200 - 150*hitBean.r/4} #{200 + 75*hitBean.r/4},200 200,200" stroke="black" id="rectangle"/>
                         <!-- Triangle-->
-                        <polygon fill="#e3256b" fill-opacity="0.5" points="#{200 + 150*hitresBean.r/4},200 200,#{200 + 75*hitresBean.r/4} 200,200" stroke="black" id="triangle"/>
+                        <polygon fill="#e3256b" fill-opacity="0.5" points="#{200 + 150*hitBean.r/4},200 200,#{200 + 75*hitBean.r/4} 200,200" stroke="black" id="triangle"/>
                         <!-- Circle-->
-                        <path d="M#{200 - 150*hitresBean.r/4} 200 A 150 150, 0, 0, 0, 200 #{200 + 150*hitresBean.r/4} L 200 200 Z" fill="#991199" fill-opacity="0.5" stroke="black" id="path"/>
+                        <path d="M#{200 - 150*hitBean.r/4} 200 A 150 150, 0, 0, 0, 200 #{200 + 150*hitBean.r/4} L 200 200 Z" fill="#991199" fill-opacity="0.5" stroke="black" id="path"/>
                         <!--Coordinate axes-->
                         <line stroke="black" x1="0" x2="400" y1="200" y2="200"/>
                         <line stroke="black" x1="200" x2="200" y1="0" y2="400"/>
@@ -86,7 +86,7 @@
                         <text fill="black" x="210" y="15">Y</text>
                         <!-- Shot shadow -->
                         <circle id="dot" fill="blue" color="blue" r="0" cx="0" cy="0"/>
-                        <ui:repeat value="#{hitresBean.getHistory()}" var="data">
+                        <ui:repeat value="#{hitBean.getHistory()}" var="data">
                             <circle r="3" cx="#{data.x*37 + 200}" cy="#{200 - data.y*37}" fill="#{data.result ? 'LIME' : 'RED'}"/>
                         </ui:repeat>
                     </svg>
@@ -100,7 +100,7 @@
                 </div>
 
                 <div class="scroll-container" style="background-color: rgba(0, 125, 215, 0)">
-                    <h:dataTable id="result-table" value="#{hitresBean.history}" var="response">
+                    <h:dataTable id="result-table" value="#{hitBean.history}" var="response">
                         <h:column>
                             <f:facet name="header">X</f:facet>
                             #{response.x}
@@ -142,7 +142,7 @@
                         <tr>
                             <td class="input-grid-label">
                                 <h:outputLabel id="x" class="duplicate_label">X:
-                                <ace:sliderEntry length="240px" id="x_sliderEntry" min="-4" max="4" stepPercent="3" value="${hitresBean.x}">
+                                <ace:sliderEntry length="240px" id="x_sliderEntry" min="-4" max="4" stepPercent="3" value="${hitBean.x}">
                                     <f:ajax event="slide" render="x @this"/>
                                 </ace:sliderEntry>
                                 </h:outputLabel>
@@ -153,7 +153,9 @@
                             <td class="input-grid-label">
                                 <h:outputLabel>Y:
                                 <h:inputText id="y-textinput" a:placeholder="Number from -3 to 5..." maxlength="10"
-                                             name="yval" value="#{hitresBean.y}">
+                                             name="yval" value="#{hitBean.y}" converterMessage="Введите корректное число"
+                                             converter="javax.faces.Double">
+                                    <f:validateDoubleRange  minimum="-3" maximum="5"/>
                                     <f:ajax execute="@this" render="@this" validatorMessage="Введите Y(Number from 1 to 4)">
                                 </f:ajax>
                                 </h:inputText>
@@ -165,26 +167,30 @@
                             <td class="input-grid-label">
                                 <h:outputLabel for="r-textinput">R:
                                 <h:inputText id="r-textinput" a:placeholder="Number from 1 to 4..." maxlength="10"
-                                             name="yval" value="#{hitresBean.r}" onchange="updateRadius()"
-                                >
-                                    <f:ajax execute="@this" render="@this, svg"
-                                            validatorMessage="Введите R(Number from 1 to 4)">
+                                             name="yval" value="#{hitBean.r}" onchange="updateRadius()"
+                                             converterMessage="Введите корректное число"
+                                             converter="javax.faces.Double"
+                                ><f:validateDoubleRange  minimum="1" maximum="4"/>
+                                    <f:ajax execute="@this" render="@this, svg">
+
                                     </f:ajax>
                                 </h:inputText>
                                 </h:outputLabel>
                             </td>
                             <td>
-                                <h:panelGroup rendered="true" id="error">
-                                    <div id="error_x">
-                                        <h:outputText value="#{hitresBean.errorX.getMessage()}"/>
-                                    </div>
-                                    <div id="error_y">
-                                        <h:outputText value="#{hitresBean.errorY.getMessage()}"/>
-                                    </div>
-                                    <div id="error_r">
-                                        <h:outputText value="#{hitresBean.errorR.getMessage()}"/>
-                                    </div>
-                                </h:panelGroup>
+                                <div id="errors">
+                                    <h:panelGroup rendered="true" id="error">
+                                        <div id="error_x">
+                                            <h:outputText value="#{hitBean.errorX.getMessage()}"/>
+                                        </div>
+                                        <div id="error_y">
+                                            <h:outputText value="#{hitBean.errorY.getMessage()}"/>
+                                        </div>
+                                        <div id="error_r">
+                                            <h:outputText value="#{hitBean.errorR.getMessage()}"/>
+                                        </div>
+                                    </h:panelGroup>
+                                </div>
                             </td>
                         </tr>
                         <!-- Buttons -->
@@ -192,7 +198,7 @@
 
                             <td colspan="2">
                                 <div class="buttons">
-                                    <h:commandButton id="send" type="submit" value="Выстрел" action="${hitresBean.submit()}" render="result-table"/>
+                                    <h:commandButton id="send" type="submit" value="Выстрел" action="${hitBean.submit()}" render="result-table"/>
                                     <h:commandButton id="reset" type="reset" value="Очистить"/>
                                 </div>
                             </td>
@@ -202,10 +208,10 @@
             </td>
         </tr>
         <h:form id="hideform">
-            <h:inputHidden value="#{hitresBean.x}" id="x_clicked" a:hidden="true"/>
-            <h:inputHidden value="#{hitresBean.y}" id="y_clicked" a:hidden="true"/>
-            <h:inputHidden value="#{hitresBean.r}" id="r_clicked" a:hidden="true"/>
-            <h:commandButton a:hidden="true" id="sendForm" type="submit" value="Выстрел" action="#{hitresBean.submit()}">
+            <h:inputHidden value="#{hitBean.x}" id="x_clicked" a:hidden="true"/>
+            <h:inputHidden value="#{hitBean.y}" id="y_clicked" a:hidden="true"/>
+            <h:inputHidden value="#{hitBean.r}" id="r_clicked" a:hidden="true"/>
+            <h:commandButton a:hidden="true" id="sendForm" type="submit" value="Выстрел" action="#{hitBean.submit()}">
                 <f:ajax execute="@form" render="graph result-table"/>
             </h:commandButton>
         </h:form>

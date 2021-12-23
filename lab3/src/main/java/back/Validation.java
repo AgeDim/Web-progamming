@@ -12,7 +12,7 @@ public class Validation implements IValidation, Serializable {
             doubleX = Float.parseFloat(x);
             if (doubleX > 4 && doubleX < -4) {
                 doubleX = null;
-                HitBean.errorX = new Error("Поле должно быть от -4 до 4.");
+                HitBean.errorX = new Error("Поле должно быть от -2 до 2.");
             }
         } catch (NumberFormatException exception) {
             HitBean.errorX = new Error("Поле X должно быть числом.");
@@ -30,6 +30,9 @@ public class Validation implements IValidation, Serializable {
         Float doubleY = null;
         try {
             doubleY = Float.parseFloat(y);
+            if(doubleY == null){
+                HitBean.errorY = new Error("Поле Y не введено.");
+            }
             if (doubleY > 5 && doubleY < -3) {
                 doubleY = null;
                 HitBean.errorY = new Error("Поле должно быть от -3 до 5.");
@@ -54,6 +57,7 @@ public class Validation implements IValidation, Serializable {
             intR = Float.parseFloat(r);
             if (intR > 4 && intR < 1) {
                 intR = null;
+                HitBean.errorR = new Error("Поле должно быть от 1 до 4.");
             }
         } catch (NumberFormatException exception) {
             HitBean.errorR = new Error("Поле R должно быть числом.");

@@ -11,7 +11,7 @@ public class Result {
 
     @Id
     @Column(name="id")
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "next_shots_id")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "next_result_id")
     private int id;
 
     @Column(name="x")
